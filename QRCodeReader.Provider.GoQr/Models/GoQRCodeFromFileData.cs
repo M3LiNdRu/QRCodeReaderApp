@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-namespace QRCodeReader.Core.Models
+namespace QRCodeReader.Provider.GoQr.Models
 {
     public class GoQRCodeFromFileData
     {

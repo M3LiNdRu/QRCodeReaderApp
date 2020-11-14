@@ -11,6 +11,10 @@ using QRCodeReader.Core.Concrete;
 using QRCodeReader.Core.Helpers;
 using QRCodeReader.Core.Interfaces;
 using QRCodeReader.Core.Models;
+using QRCodeReader.Provider.GoQr.Concrete;
+using QRCodeReader.Provider.GoQr.Helpers;
+using QRCodeReader.Provider.GoQr.Interfaces;
+using QRCodeReader.Provider.GoQr.Models;
 
 namespace QRCodeReader.Site
 {

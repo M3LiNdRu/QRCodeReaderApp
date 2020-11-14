@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using QRCodeReader.Core.Models;
+using QRCodeReader.Provider.GoQr.Models;
 
-namespace QRCodeReader.Core.Interfaces
+namespace QRCodeReader.Provider.GoQr.Interfaces
 {
     public interface IGoQRCodeClientHelper
     {

@@ -4,10 +4,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using QRCodeReader.Core.Interfaces;
-using QRCodeReader.Core.Models;
+using QRCodeReader.Provider.GoQr.Interfaces;
+using QRCodeReader.Provider.GoQr.Models;
 
-namespace QRCodeReader.Core.Helpers
+namespace QRCodeReader.Provider.GoQr.Helpers
 {
     public class GoQRCodeClientHelper : IGoQRCodeClientHelper
     {

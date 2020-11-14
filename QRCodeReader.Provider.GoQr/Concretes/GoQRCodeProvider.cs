@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Options;
 using QRCodeReader.Core.Interfaces;
 using QRCodeReader.Core.Models;
-using QRCodeReader.Core.Helpers;
+using QRCodeReader.Provider.GoQr.Helpers;
+using QRCodeReader.Provider.GoQr.Interfaces;
+using QRCodeReader.Provider.GoQr.Models;
 
-namespace QRCodeReader.Core.Concrete
+namespace QRCodeReader.Provider.GoQr.Concrete
 {
     public class GoQRCodeProvider : IQRCodeProvider
     {

@@ -18,13 +18,6 @@ namespace QRCodeReader.Site.Controllers
             _qRCodeProvider = provider;
         }
 
-        // GET: api/qrcode
-        [HttpGet]
-        public string Get()
-        {
-            return "It works :)";
-        }
-
         // POST api/qrcode
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] IFormFile formFile)
@@ -33,17 +26,18 @@ namespace QRCodeReader.Site.Controllers
             {
                 if (formFile.Length > 0)
                 {
-                    using var stream = new MemoryStream();
-                    await formFile.CopyToAsync(stream);
                     var data = new QRCodeFromFile
                     {
                         Name = formFile.FileName,
-                        Stream = stream,
                         Size = formFile.Length
                     };
-                    var result = await _qRCodeProvider.Read(data);
 
-                    return Ok(result);
+                    using (data.Stream = new MemoryStream())
+                    {
+                        await formFile.CopyToAsync(data.Stream);
+                        var result = await _qRCodeProvider.Read(data);
+                        return Ok(result);
+                    } 
                 }
 
                 return Ok(new { Message = "No file has been uploaded." });            

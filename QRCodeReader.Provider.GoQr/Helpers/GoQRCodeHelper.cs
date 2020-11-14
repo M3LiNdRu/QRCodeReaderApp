@@ -1,8 +1,7 @@
-﻿using System;
-using QRCodeReader.Core.Models;
+﻿using QRCodeReader.Core.Models;
+using QRCodeReader.Provider.GoQr.Models;
 
-
-namespace QRCodeReader.Core.Helpers
+namespace QRCodeReader.Provider.GoQr.Helpers
 {
     public static class GoQRCodeHelper
     {

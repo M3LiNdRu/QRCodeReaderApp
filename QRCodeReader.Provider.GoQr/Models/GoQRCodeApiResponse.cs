@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace QRCodeReader.Core.Models
+namespace QRCodeReader.Provider.GoQr.Models
 {
     public class GoQRCodeApiResponse
     {
