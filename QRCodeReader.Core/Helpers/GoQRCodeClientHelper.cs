@@ -42,9 +42,9 @@ namespace QRCodeReader.Core.Helpers
         async Task<GoQRCodeApiResponse> IGoQRCodeClientHelper.PostImageAsync(string url, GoQRCodeFromFileData data) 
         {
             var content = new MultipartFormDataContent();
-            content.Add(new StringContent(data.Size.ToString()), "MAX_FILE_SIZE", "MAX_FILE_SIZE");
+            content.Add(new StringContent("1048576"), "MAX_FILE_SIZE", "MAX_FILE_SIZE");
             content.Add(new StreamContent(data.File), "file", data.Name);
-            //content.Add(new ByteArrayContent(ReadFully(data.File)), "file", "file");
+            //content.Add(new ByteArrayContent(ReadFully(data.File)), "file", data.Name);
 
             var response = await _httpClient.PostAsync(url, content);
 
