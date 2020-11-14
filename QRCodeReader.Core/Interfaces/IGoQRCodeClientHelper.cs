@@ -6,5 +6,6 @@ namespace QRCodeReader.Core.Interfaces
     public interface IGoQRCodeClientHelper
     {
         Task<GoQRCodeApiResponse> PostAsync<T>(string url, T data);
+        Task<GoQRCodeApiResponse> PostImageAsync(string url, GoQRCodeFromFileData data);
     }
 }

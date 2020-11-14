@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -36,6 +37,37 @@ namespace QRCodeReader.Core.Helpers
             var result = JsonConvert.DeserializeObject<GoQRCodeApiResponse>(responseString);
 
             return result;
+        }
+
+        async Task<GoQRCodeApiResponse> IGoQRCodeClientHelper.PostImageAsync(string url, GoQRCodeFromFileData data) 
+        {
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent(data.Size.ToString()), "MAX_FILE_SIZE", "MAX_FILE_SIZE");
+            content.Add(new StreamContent(data.File), "file", data.Name);
+            //content.Add(new ByteArrayContent(ReadFully(data.File)), "file", "file");
+
+            var response = await _httpClient.PostAsync(url, content);
+
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<GoQRCodeApiResponse>(responseString);
+
+            return result;
+        }
+
+        public static byte[] ReadFully(Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
         }
     }
 }

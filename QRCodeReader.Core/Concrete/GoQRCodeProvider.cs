@@ -2,15 +2,18 @@
 using Microsoft.Extensions.Options;
 using QRCodeReader.Core.Interfaces;
 using QRCodeReader.Core.Models;
+using QRCodeReader.Core.Helpers;
 
 namespace QRCodeReader.Core.Concrete
 {
-    public class GoQRProvider : IQRCodeProvider
+    public class GoQRCodeProvider : IQRCodeProvider
     {
+        private const string Slash = "/";
+
         private readonly GoQRCodeProviderConfiguration _configuration;
         private readonly IGoQRCodeClientHelper _restClientHelper;
 
-        public GoQRProvider(IOptionsMonitor<GoQRCodeProviderConfiguration> options, IGoQRCodeClientHelper httpClient)
+        public GoQRCodeProvider(IOptionsMonitor<GoQRCodeProviderConfiguration> options, IGoQRCodeClientHelper httpClient)
         {
             _configuration = options.CurrentValue;
             _restClientHelper = httpClient;
@@ -20,15 +23,16 @@ namespace QRCodeReader.Core.Concrete
         {
             var result = new QRCodeData();
             var url = BuildReadResourceUri();
-            var response = await _restClientHelper.PostAsync(url, data);
-
+            var response = await _restClientHelper.PostImageAsync(url, data.ToGoQRCodeFromFileData());
+            result.Data = response.Type;
 
             return result;
         }
 
         private string BuildReadResourceUri()
         {
-            return string.Concat(_configuration.BaseUrl, _configuration.Version, _configuration.ReadResourceUri );
+            return string.Concat(_configuration.BaseUrl,
+                Slash, _configuration.Version, Slash, _configuration.ReadResourceUri );
         }
 
         

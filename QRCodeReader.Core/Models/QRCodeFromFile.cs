@@ -6,6 +6,6 @@ namespace QRCodeReader.Core.Models
     {
         public string Name { get; set; }
         public Stream Stream { get; set; }
-        public int Size { get; set; }
+        public long Size { get; set; }
     }
 }

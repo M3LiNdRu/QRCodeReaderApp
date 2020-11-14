@@ -1,13 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
+using Polly.Extensions.Http;
+using QRCodeReader.Core.Concrete;
+using QRCodeReader.Core.Helpers;
+using QRCodeReader.Core.Interfaces;
+using QRCodeReader.Core.Models;
 
 namespace QRCodeReader.Site
 {
@@ -24,6 +27,24 @@ namespace QRCodeReader.Site
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+
+            services.Configure<GoQRCodeProviderConfiguration>(Configuration.GetSection("GoQRCodeProvider"));
+
+            services.AddSingleton<IQRCodeProvider, GoQRCodeProvider>();
+
+            services.AddHttpClient<IGoQRCodeClientHelper, GoQRCodeClientHelper>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5)) 
+                .AddPolicyHandler(GetRetryPolicy());
+
+        }
+
+        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2,
+                                                                            retryAttempt)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
