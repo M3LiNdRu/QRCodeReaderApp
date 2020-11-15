@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRCodeReader.Site", "QRCode
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRCodeReader.Provider.GoQr", "QRCodeReader.Provider.GoQr\QRCodeReader.Provider.GoQr.csproj", "{A46B199E-61AC-4CEB-81EF-A889701BAC9E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{CDD06C47-0A54-4987-82C3-75A42DEE3E19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,5 +27,8 @@ Global
 		{A46B199E-61AC-4CEB-81EF-A889701BAC9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A46B199E-61AC-4CEB-81EF-A889701BAC9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A46B199E-61AC-4CEB-81EF-A889701BAC9E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A46B199E-61AC-4CEB-81EF-A889701BAC9E} = {CDD06C47-0A54-4987-82C3-75A42DEE3E19}
 	EndGlobalSection
 EndGlobal
