@@ -33,8 +33,10 @@ namespace QRCodeReader.Site
 
             services.AddSingleton<IQRCodeProvider, GoQRCodeProvider>();
 
+            //services.AddSingleton<IGoQRCodeClientHelper, RestSharpQrCodeClientHelper>();
+
             services.AddHttpClient<IGoQRCodeClientHelper, GoQRCodeClientHelper>()
-                .SetHandlerLifetime(TimeSpan.FromMinutes(5)) 
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddPolicyHandler(GetRetryPolicy());
 
         }

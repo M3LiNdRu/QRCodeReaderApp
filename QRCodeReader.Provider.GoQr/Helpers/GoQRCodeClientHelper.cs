@@ -44,7 +44,6 @@ namespace QRCodeReader.Provider.GoQr.Helpers
             var content = new MultipartFormDataContent();
             content.Add(new StringContent("1048576"), "MAX_FILE_SIZE", "MAX_FILE_SIZE");
             content.Add(new StreamContent(data.File), "file", data.Name);
-            //content.Add(new ByteArrayContent(ReadFully(data.File)), "file", data.Name);
 
             var response = await _httpClient.PostAsync(url, content);
 
