@@ -11,3 +11,12 @@
         <input type="submit" value="Read QR code" />
     </form>
 </div>
+<div class="display:none;">
+
+    <form enctype="multipart/form-data" action="http://api.qrserver.com/v1/read-qr-code/" method="POST">
+        <input type="hidden" name="outputformat" value="json" />
+        <input type="file"  name="file"  />
+        <input type="submit" value="Read QR code" />
+    </form>
+
+</div>
