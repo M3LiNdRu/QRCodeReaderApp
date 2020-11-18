@@ -26,7 +26,9 @@ namespace QRCodeReader.Provider.GoQr.Concrete
             var result = new QRCodeData();
             var url = BuildReadResourceUri();
             var response = await _restClientHelper.PostImageAsync(url, data.ToGoQRCodeFromFileData());
-            result.Data = response.Type;
+
+            if (response.Success)
+                result.Data = response.Data.Type;
 
             return result;
         }
