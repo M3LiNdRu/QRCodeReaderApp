@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Extensions.Http;
 using QRCodeReader.Core.Interfaces;
@@ -24,34 +24,40 @@ namespace QRCodeReader.Console
 
         static async Task Main(string[] args)
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true)
-                .Build();
+            var builder = new HostBuilder()
+                .ConfigureAppConfiguration((context, builder) =>
+                {
+                    builder.AddJsonFile($"appsettings.json", true, true);
+                    builder.AddEnvironmentVariables();
 
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddOptions();
-            //serviceCollection.Configure<GoQRCodeProviderConfiguration>((c) =>
-            //{
-            //    c = configuration.GetSection("GoQRCodeProvider").Get<GoQRCodeProviderConfiguration>();
-            //});
-            serviceCollection.AddSingleton<IOptionsMonitor<GoQRCodeProviderConfiguration>, OptionsMonitorGoQRConfiguration>();
-            serviceCollection.AddSingleton<IQRCodeProvider, GoQRCodeProvider>();
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.Configure<GoQRCodeProviderConfiguration>(hostContext.Configuration.GetSection("GoQRCodeProvider"));
+                    services.AddLogging(configure => configure.AddConsole());
+                    services.AddSingleton<IQRCodeProvider, GoQRCodeProvider>();
+                    services.AddHttpClient<IGoQRCodeClientHelper, GoQRCodeClientHelper>()
+                        .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                        .AddPolicyHandler(GetRetryPolicy());
 
-            serviceCollection.AddHttpClient<IGoQRCodeClientHelper, GoQRCodeClientHelper>()
-                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-                .AddPolicyHandler(GetRetryPolicy());
+                }).UseConsoleLifetime();
 
-            serviceProvider = serviceCollection.BuildServiceProvider();
+            var host = builder.Build();
 
-            var provider = serviceProvider.GetService<IQRCodeProvider>();
+            using (var serviceScope = host.Services.CreateScope())
+            {
+                var serviceProvider = serviceScope.ServiceProvider;
 
-
-            var data = await LoadQRFromLocalFile(@"./qr-test.png");
-            var result = await provider.Read(data);
+                var provider = serviceProvider.GetService<IQRCodeProvider>();
 
 
-            System.Console.WriteLine(result.Data);
+                var data = await LoadQRFromLocalFile(@"./qr-test.png");
+                var result = await provider.Read(data);
+
+
+                System.Console.WriteLine(result.Data);
+            }
+
         }
 
         private static async Task<QRCodeFromFile> LoadQRFromLocalFile(string filePath)
